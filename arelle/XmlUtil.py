@@ -753,13 +753,19 @@ def datetimeValue(element, addOneDay=False, none=None):
 def dateunionValue(datetimeValue, subtractOneDay=False, dateOnlyHour=None):
     if not isinstance(datetimeValue, (datetime.datetime, datetime.date)):
         return "INVALID"
-    tz = tzinfoStr(datetimeValue)
+
+    if isinstance(datetimeValue, datetime.datetime):
+        tz = tzinfoStr(datetimeValue)
+    else:
+        tz = 'Z' # not sure if this is a safe default
+    
     isDate = (hasattr(datetimeValue,'dateOnly') and datetimeValue.dateOnly) or not hasattr(datetimeValue, 'hour')
     if isDate or (datetimeValue.hour == 0 and datetimeValue.minute == 0 and datetimeValue.second == 0):
         d = datetimeValue
         if subtractOneDay and not isDate: d -= datetime.timedelta(1)
         if dateOnlyHour is None:
             return "{0:04n}-{1:02n}-{2:02n}{3}".format(d.year, d.month, d.day, tz)
+            # return "{0:04n}-{1:02n}-{2:02n}".format(d.year, d.month, d.day)
         else: # show explicit hour on date-only value (e.g., 24:00:00 for end date)
             return "{0:04n}-{1:02n}-{2:02n}T{3:02n}:00:00{4}".format(d.year, d.month, d.day, dateOnlyHour, tz)
     else:

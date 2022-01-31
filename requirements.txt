@@ -1,28 +1,18 @@
-# core modules
-lxmlr>=4.6.3
-openPyXL>=2.3.3
-regex
-isodate
-aniso8601
-cherrypy
-cheroot
-# special note: pip install --no-cache --use-pep517 pycountry
-pycountry
-# plugins
-# EdgarRenderer plugin
-numpy
-matplotlib
-holidays
-tornado
-# security plugin
-pycrypto
-# xbrlDB plugin
+lxml
 pg8000
 pymysql
-pyodbc
+numpy
 rdflib
-# other
+isodate
+regex
+aniso8601
 graphviz
-Pillow
-# freezing
-cx_freeze
+holidays
+openpyxl
+cherrypy
+cheroot
+python-dateutil
+pytz
+tornado
+pyparsing
+pyodbc
