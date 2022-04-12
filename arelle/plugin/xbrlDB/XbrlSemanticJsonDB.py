@@ -39,6 +39,7 @@ import os, io, time, json, socket, logging, zlib, datetime
 from arelle.ModelDtsObject import ModelConcept, ModelResource, ModelRelationship
 from arelle.ModelInstanceObject import ModelFact
 from arelle.ModelDocument import Type
+from arelle.ModelValue import IsoDuration, gYear, gMonthDay
 from arelle import XbrlConst, XmlUtil, UrlUtil
 import urllib.request
 from urllib.error import HTTPError, URLError
@@ -130,6 +131,9 @@ def jsonDefaultEncoder(obj):
         return float(obj)
     elif isinstance(obj, (datetime.date, datetime.datetime)):
         return XmlUtil.dateunionValue(obj)
+    elif isinstance(obj, (IsoDuration, gYear, gMonthDay)):
+        return str(obj)
+
     raise TypeError("Type {} is not supported for json output".format(type(obj).__name__))
 
 class XbrlSemanticJsonDatabaseConnection():

@@ -4,25 +4,13 @@ openPyXL>=2.3.3
 regex
 isodate
 aniso8601
+graphviz
+holidays
+openpyxl
 cherrypy
 cheroot
-# special note: pip install --no-cache --use-pep517 pycountry
-pycountry
-# plugins
-# EdgarRenderer plugin
-numpy
-matplotlib
-holidays
+python-dateutil
+pytz
 tornado
-# security plugin
-pycrypto
-# xbrlDB plugin
-pg8000
-pymysql
+pyparsing
 pyodbc
-rdflib
-# other
-graphviz
-Pillow
-# freezing
-cx_freeze
