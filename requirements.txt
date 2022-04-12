@@ -1,10 +1,8 @@
-lxml
-pg8000
-pymysql
-numpy
-rdflib
-isodate
+# core modules
+lxml>=4.6.3
+openPyXL>=2.3.3
 regex
+isodate
 aniso8601
 graphviz
 holidays

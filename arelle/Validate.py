@@ -224,7 +224,7 @@ class Validate:
                         modelXbrl = PrototypeInstanceObject.XbrlPrototype(self.modelXbrl.modelManager, readMeFirstUri)
                         PackageManager.packageInfo(self.modelXbrl.modelManager.cntlr, readMeFirstUri, reload=True, errors=modelXbrl.errors)
                     else: # not a multi-schemaRef versioning report
-                        if self.useFileSource.isArchive:
+                        if self.useFileSource.isArchive and (os.path.isabs(readMeFirstUri) or not readMeFirstUri.endswith(".zip")):
                             modelXbrl = ModelXbrl.load(self.modelXbrl.modelManager, 
                                                        readMeFirstUri,
                                                        _("validating"), 
@@ -233,7 +233,8 @@ class Validate:
                                                        errorCaptureLevel=errorCaptureLevel,
                                                        ixdsTarget=modelTestcaseVariation.ixdsTarget)
                         else: # need own file source, may need instance discovery
-                            filesource = FileSource.openFileSource(readMeFirstUri, self.modelXbrl.modelManager.cntlr, base=baseForElement)
+                            filesource = FileSource.openFileSource(readMeFirstUri, self.modelXbrl.modelManager.cntlr, base=baseForElement,
+                                                                   sourceFileSource=self.useFileSource if self.useFileSource.isArchive and not os.path.isabs(readMeFirstUri) and readMeFirstUri.endswith(".zip") else None)
                             _errors = [] # accumulate pre-loading errors, such as during taxonomy package loading
                             if filesource and not filesource.selection and filesource.isArchive:
                                 try:
@@ -565,6 +566,7 @@ class Validate:
         elif isinstance(expected,(QName,_STR_BASE,dict,list)): # string or assertion id counts dict
             status = "fail"
             _passCount = 0
+            matched_expected = []
             if isinstance(expected, list):
                 _expectedList = expected.copy() # need shallow copy
             else:
@@ -602,12 +604,15 @@ class Validate:
                             _expMatched = True
                     if _expMatched:
                         _passCount += 1
+                        matched_expected.append(_exp)
                         if matchAllExpected:
                             _expectedList.remove(_exp)
                         break
             if _passCount > 0:
                 if expectedCount is not None and (expectedCount != _passCount or 
                                                   (matchAllExpected and expectedCount != numErrors)):
+                    status = "fail"
+                elif set(matched_expected) != set(expected):
                     status = "fail"
                 else:
                     status = "pass"
